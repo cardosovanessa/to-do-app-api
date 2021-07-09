@@ -5,6 +5,8 @@ const port = 3030
 const usersRoute = require('./controllers/users-controller')
 const tasksRoute = require('./controllers/tasks-controller')
 
+app.use(express.json())
+
 usersRoute(app)
 tasksRoute(app)
 
