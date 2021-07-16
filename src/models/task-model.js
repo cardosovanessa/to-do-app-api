@@ -1,7 +1,7 @@
 var idTask = 0;
 
 class Task {
-  constructor(titulo, descricao, senha, dataCriacao) {
+  constructor(titulo, descricao, status, dataCriacao) {
     this.id = idTask++;
     this.titulo = titulo;
     this.descricao = descricao;
