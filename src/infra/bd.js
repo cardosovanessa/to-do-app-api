@@ -1,4 +1,6 @@
-module.exports = db = {
+const bd = require("./sqlite-db");
+
+module.exports = bd = {
   users: [],
   tasks: []
 }

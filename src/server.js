@@ -1,4 +1,5 @@
 const express = require('express');
+// configs
 const app = express()
 const port = 3030
 
@@ -9,15 +10,15 @@ const tasksRoute = require('./controllers/tasks-controller');
 // import models n DB
 const User = require('./models/user-model')
 const Task = require('./models/task-model')
-const Db = require('./infra/sqlite-db')
+const bd = require('./infra/sqlite-db')
 
 // middlewares
 app.use(express.json())
 
 // usando rotas
-usersRoute(app, User, Db)
-tasksRoute(app, Task, Db)
+usersRoute(app, bd)
+tasksRoute(app, bd)
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log('Servidor rodando na porta: ' + port)
 })

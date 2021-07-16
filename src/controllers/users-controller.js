@@ -20,44 +20,46 @@ module.exports = (app, db) => {
 
   app.get('/users/email', (req, res) => {
     let arrayResp = db.users.filter((element) => {
-      return element.email === req.params.email
-    })
+      return element.email === req.params.email;
+    });
     res.json({
       result: arrayResp,
-      // count: arrayResp.length,
-    })
-  })
-
-  app.delete('/users/:email', (req, res) => {
-    let arrayCount = db.users.filter((element) => {
-      return element.email !== req.params.email;
-    })
-    if (arrayCount === db.users.length) {
-      res.json({
-        message: `Não existe usuário com este e-mail: ${req.params.email}`,
-        error: true
-      })
-    } else {
-      res.json({
-        message: `Usuário com e-mail: ${req.params.email}, foi deletado com sucesso.`,
-        error: false
-      })
-    }
-  })
+      count: arrayResp.length,
+    });
+  });
 
   app.post('/users', (req, res) => {
     const {
       nome,
       email,
       senha
-    } = req.body
-    let newUser = new User(nome, email, senha)
-    db.users.push(newUser)
+    } = req.body;
+    let newUser = new User(nome, email, senha);
+    db.users.push(newUser);
     res.json({
       message: 'Usuário criado com sucesso.',
-      error: false
+      error: false,
+    });
+  });
+
+  app.delete('/users/:email', (req, res) => {
+    let arrayCount = db.users.length;
+
+    db.users = db.users.filter((element) => {
+      return element.email !== req.params.email;
     })
-  })
+    if (arrayCount === db.users.length) {
+      res.json({
+        message: `Não existe usuário com este e-mail: ${req.params.email}`,
+        error: true,
+      })
+    } else {
+      res.json({
+        message: `Usuário com e-mail: ${req.params.email}, foi deletado com sucesso.`,
+        error: false,
+      });
+    }
+  });
 
   app.put('/users/:email', (req, res) => {
     const {
@@ -78,25 +80,25 @@ module.exports = (app, db) => {
           if (senha) {
             element["senha"] = senha;
           }
-          varCount++
+          varCount++;
         }
       })
       if (!varCount) {
         res.json({
           message: `Não existe usuário com este e-mail: ${req.params.email}`,
-          error: true
+          error: true,
         })
       } else {
         res.json({
           message: `Usuário com e-mail: ${req.params.email}, foi atualizado com sucesso.`,
           error: true,
-          count: varCount
+          count: varCount,
         })
       }
     } else {
       res.json({
         message: "Não foi possível atualizar o usuário, verifique se o campo informado é valido.",
-        error: true
+        error: true,
       })
     }
   })

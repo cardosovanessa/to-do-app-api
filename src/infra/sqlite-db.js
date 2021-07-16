@@ -1,5 +1,5 @@
 const path = require('path');
-const caminhoArq = path.resolve(__dirname, '../', '../', 'database.db')
+const caminhoArq = path.resolve(__dirname,'../','../','database.db')
 
 const sqlite3 = require('sqlite3').verbose();
 const bd = new sqlite3.Database(caminhoArq);
