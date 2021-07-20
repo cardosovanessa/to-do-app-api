@@ -1,22 +1,19 @@
-const User = require('../models/user-model')
+const User = require('../models/user-model');
+const UserDao = require('../DAO/UserDao');
 
 module.exports = (app, db) => {
+  let userBanco = new UserDao(db)
   app.get('/users', (req, res) => {
-    db.all("Select * from USUARIOS", (err,rows) =>{
-      if(err){
-        res.json({
-          message:"Error ao obter usuários",
-          error:true
-        })
-      }
-      else{
-        res.json({
-          result:rows,
-          count:rows.length
-        })
-      }
+    userBanco.getAllUsers().then(rows => {
+      res.json({
+        result: rows,
+        count: rows.length
     })
-  });
+  })
+    .catch(err => {
+      res.json({err})
+    })
+  })
 
   app.get('/users/email', (req, res) => {
     let arrayResp = db.users.filter((element) => {
@@ -35,11 +32,20 @@ module.exports = (app, db) => {
       senha
     } = req.body;
     let newUser = new User(nome, email, senha);
-    db.users.push(newUser);
-    res.json({
-      message: 'Usuário criado com sucesso.',
-      error: false,
-    });
+    db.run(`INSERT INTO USUARIOS VALUES(?, ?, ?, ?)`, [null, newUser.nome, newUser.email, newUser.senha], err => {
+      if(err){
+        res.json({
+          message: "Erro ao criar usuário.",
+          error: true
+        })
+      }
+      else{
+        res.json({
+          message: "Usuário criado com sucesso.",
+          error: false
+        })
+      }
+    })
   });
 
   app.delete('/users/:email', (req, res) => {
@@ -102,4 +108,4 @@ module.exports = (app, db) => {
       })
     }
   })
-}
+};
