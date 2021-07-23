@@ -1,6 +1,6 @@
-const app = require('./app')
+const express = require('express');
+const cors = require('cors');
 
-/*const express = require('express');
 // configs
 const app = express()
 const port = 3030
@@ -16,11 +16,10 @@ const bd = require('./infra/sqlite-db')
 
 // middlewares
 app.use(express.json())
+app.use(cors())
 
 // usando rotas
 usersRoute(app, bd)
-tasksRoute(app, bd) */
+tasksRoute(app, bd)
 
-app.listen(port, () => {
-  console.log('Servidor rodando na porta: ' + port)
-})
+module.exports = app

@@ -1,9 +1,10 @@
 class Task {
-  constructor(titulo, descricao, status, dataCriacao) {
+  constructor(titulo, descricao, status, dataCriacao, userId) {
     this.titulo = titulo;
     this.descricao = descricao;
     this.status = status;
-    this.dataCriacao = dataCriacao;
+    this.dataCriacao = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss').diff;
+    this.criador = userId
   }
 }
 

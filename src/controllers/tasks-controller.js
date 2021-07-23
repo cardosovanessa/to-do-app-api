@@ -4,10 +4,11 @@ module.exports = (app, db) => {
   app.get('/tasks', (req, res) => {
     res.json({
       result: db.tasks,
-      // count: db.tasks.length
+      count: db.tasks.length
     })
   })
 
+  /*
   app.get('/tasks/:titulo', (req, res) => {
     let arrayResp = db.tasks.filter((element) => {
       return element.titulo === req.params.titulo
@@ -34,14 +35,15 @@ module.exports = (app, db) => {
         error: false
       })
     }
-  })
+  }) */
 
   app.post('/tasks', (req, res) => {
     const {
       titulo,
       descricao,
       status,
-      dataCriacao
+      dataCriacao,
+      userId
     } = req.body
     let newTasks = new Task(titulo, descricao, status, dataCriacao)
     db.tasks.push(newTasks)
@@ -51,6 +53,7 @@ module.exports = (app, db) => {
     })
   })
 
+  /*
   app.put('/tasks/:titulo', (req, res) => {
     const {
       titulo,
@@ -95,5 +98,5 @@ module.exports = (app, db) => {
         error: true
       })
     }
-  })
+  }) */
 };
