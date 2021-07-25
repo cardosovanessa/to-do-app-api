@@ -1,5 +1,5 @@
 const db = require('../infra/sqlite-db')
-const UserDao = require('../DAO/UserDao')
+const UserDao = require('../dao/UserDao')
 const User = require('../models/user-model')
 
 describe('Testando operaçoes DAO users', () =>{

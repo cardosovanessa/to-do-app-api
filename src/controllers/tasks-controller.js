@@ -4,16 +4,26 @@ const TaskDao = require("../dao/TaskDao")
 module.exports = (app, db) => {
   let taskBanco = new TaskDao(db)
 
-  app.get('/tasks', (req, res) => {
-    taskBanco.getAllTasks().then(rows => {
+  app.get('/tasks', async (req, res) => {
+    try {
+      const rows = await taskBanco.getAllTasks();
+      
       res.json({
         result: rows,
         count: rows.length
       })
-    })
-    .catch(err => {
-      res.json({err})
-    })
+    } catch (err) {
+      res.json({err});
+    }
+    // taskBanco.getAllTasks().then(rows => {
+    //   res.json({
+    //     result: rows,
+    //     count: rows.length
+    //   })
+    // })
+    // .catch(err => {
+    //   res.json({err})
+    // })
   })
 
   app.get('/tasks/:titulo', (req, res) => {
