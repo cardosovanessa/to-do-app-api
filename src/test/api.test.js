@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../app')
 
-describe('testando rotas de usuários', () => {
+describe('Testando rotas de usuários', () => {
   it('POST/users right', async () => {
     const response = await request(app)
       .post('/users')
@@ -23,7 +23,6 @@ describe('testando rotas de usuários', () => {
 describe('Testando rotas de tarefas', () => {
   it('POST: /tasks', async () => {
       const response = await request(app)
-
       .post('/tasks')
       .send({
           titulo: 'class',
@@ -35,7 +34,6 @@ describe('Testando rotas de tarefas', () => {
 
   it('GET: /tasks', async () => {
     const response = await request(app)
-      
     .get('/tasks')
     expect(response.body).toHaveProperty('result')
   })
