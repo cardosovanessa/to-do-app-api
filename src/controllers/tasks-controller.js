@@ -15,109 +15,78 @@ module.exports = (app, db) => {
     } catch (err) {
       res.json({err});
     }
-    // taskBanco.getAllTasks().then(rows => {
-    //   res.json({
-    //     result: rows,
-    //     count: rows.length
-    //   })
-    // })
-    // .catch(err => {
-    //   res.json({err})
-    // })
-  })
+  });
 
-  app.get('/tasks/:titulo', (req, res) => {
-    taskBanco.getTitleTask(req.params.titulo)
-    .then(rows => {
-      res.json({
-        result: rows,
-        count: rows.length
-      })
-    })
-    .catch(err => {
-      res.json({err})
-    })
-  })
-
-  app.post('/tasks', (req, res) => {
-    const { titulo, descricao, status, data_criacao, userId } = req.body
-    let newTask = new Task(titulo, descricao, status, data_criacao, userId)
-    taskBanco.insertTask(newTask)
-    .then(() => {
-      res.status(201).json({
-        message: "Tarefa inserida com sucesso.",
-        error: false
-      })
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        message: "Erro ao inserir tarefa.",
-        error: true
-      })
-    })
-  })
-
-  app.delete('/tasks/:titulo', (req, res) => {
-    taskBanco.deleteTask(req.params.titulo)
-    .then(() => {
-      res.status(200).json({
-        message: `Tarefa com título: ${req.params.titulo}, foi deletada com sucesso.`,
-        error: false
-      })
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        message: `Erro ao deletar tarefa com o titulo: ${req.params.titulo}.`,
-        error: true
-      })
-    })
-  })
-
-  app.put('/tasks/:titulo', (req, res) => {
-    const { titulo, descricao, status, data_criacao, userId } = req.body;
-    var varCount = 0;
-    if(titulo || descricao || status || data_criacao || userId){
-      db.tasks.forEach(element => {
-        if(element.titulo === req.params.titulo){
-          if(titulo){
-            element["titulo"] = titulo;
-          }
-          if(descricao){
-            element["descricao"] = descricao;
-          }
-          if(status){
-            element["status"] = status;
-          }
-          if(data_criacao){
-            element["data_criacao"] = data_criacao;
-          }
-          if(userId){
-            element["userId"] = userId;
-          }
-          varCount++
+  app.get("/tasks/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      if (parseInt(id)) {
+        let resposta = await taskBanco.getTask(id);
+        if (resposta) 
+        res.json( resposta );
+        else {
+          throw new Error("Nenhuma tarefa encontrado");
         }
-      })
-      if(!varCount){
-        res.json({
-          message: `Não existe tarefa com esse título: ${req.params.titulo}`,
-          error: true
-        })
+      } else {
+        throw new Error("É esperado um ID tipo INT, tente novamente");
       }
-      else {
-        res.json({
-          message: `Tarefa com título: ${req.params.titulo}, foi atualizada com sucesso.`,
-          error: true,
-          count: varCount
-        })
-      }
+    } catch (err) {
+      res.status(500).json({ 
+        error: err.message 
+      });
     }
-    else {
-      res.json({
-        message: "Não foi possível atualizar a tarefa, verifique se campo passado é válido.",
+  });
+
+  app.post('/tasks', async (req, res) => {
+    const { titulo, descricao, status, userId } = req.body;
+    let newTask = new Task(titulo, descricao, status, userId)
+    try {
+      await taskBanco.insertTask(newTask);
+      res.status(201).json({
+        message: "Tarefa inserida com sucesso",
+        error: false,
+      });
+    } catch (err) {
+      res.status(500).json({
+        message: "Erro ao inserir tarefa",
+        serverLog: err.message,
         error: true
-      })
+      });
     }
-  })
-}
+  });
+
+  app.delete('/tasks/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      await taskBanco.deleteTask(id);
+      res.status(200).json({
+        message: "Tarefa deletada com sucesso",
+        error: false,
+      });
+    } catch (err) {
+      res.status(500).json({
+        message: "Erro ao deletar tarefa",
+        serverLog: err.message,
+        error: true,
+      });
+    }
+  });
+
+  app.put("/tasks/:id", async (req, res) => {
+    const {titulo, descricao, status} = req.body;
+    const { id } = req.params;
+    try {
+      await taskBanco.updateTask(id, titulo, descricao, status);
+      res.status(200).json({
+        message: "Tarefa atualizada com sucesso",
+        error: false,
+      });
+    } catch (err) {
+      res.status(500).json({
+        message: "Erro ao atualizar a tarefa",
+        serverLog: err.message,
+        error: true,
+      });
+    }
+  });
+};

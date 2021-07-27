@@ -8,9 +8,7 @@ const app = express()
 const usersRoute = require('./controllers/users-controller')
 const tasksRoute = require('./controllers/tasks-controller');
 
-// import models n DB
-const User = require('./models/user-model')
-const Task = require('./models/task-model')
+// import DB
 const db = require('./infra/sqlite-db')
 
 // middlewares

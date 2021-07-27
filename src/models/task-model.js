@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 class Task {
-  constructor(titulo, descricao, status, dataCriacao, userId) {
+  constructor(titulo, descricao, status, userId) {
     this.titulo = titulo;
     this.descricao = descricao;
     this.status = status;

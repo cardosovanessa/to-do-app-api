@@ -49,6 +49,50 @@ class TaskDao {
       })
     })
   }
+
+  updateTask(id, titulo, descricao, status) {
+    if (titulo || descricao || status) {
+      let virgula = false
+      let newArray = []
+      let sql = 'update TAREFAS set'
+      if(titulo) {
+        sql = sql + ' titulo = ?'
+        virgula = true
+        newArray.push(titulo)
+      }
+      if(descricao) {
+        if(virgula)
+          sql = sql  +',descricao = ?'
+        else {
+          sql = sql  +'descricao = ?'
+          virgula = true
+        }
+        newArray.push(descricao)
+      }
+      if(status){
+        if(virgula)
+          sql = sql  +',status = ?'
+        else {
+          sql = sql  +'status = ?'
+          virgula = true
+        }
+        newArray.push(status)
+      }
+      sql = sql + 'WHERE id = ?'
+      newArray.push(id)
+      return new Promise((resolve, reject) => {
+        this.db.run(sql, newArray, (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+    }
+    else
+    throw new Error('Nenhum atributo (id, titulo, descricao, status, datacriacao) enviado')
+  }
 }
 
 module.exports = TaskDao
